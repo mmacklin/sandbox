@@ -1,0 +1,172 @@
+\documentclass[11pt]{article}
+\usepackage{mathptmx}
+\usepackage[small,compact]{titlesec} 
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{breakurl}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath}
+\usepackage{epstopdf}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Raytracing Quadrics}
+\author{Miles Macklin}
+%\date{}                                           % Activate to display a given date or no date
+
+\renewcommand{\v}[1]{\ensuremath{\mathbf{#1}}} % for vectors
+\newcommand{\uv}[1]{\ensuremath{\mathbf{\hat{#1}}}} % for unit vectors
+\newcommand\ddx[1]{\frac{\partial#1}{\partial \v{x} }} 
+\newcommand\dd[2]{\frac{\partial#1}{\partial #2}} 
+
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This short article shows how to define and manipulate quadric surface equations in matrix form and intersect rays against them for rendering. The treatment here is inspired by \cite{Sigg:2006:GRQ:2386388.2386396} and work by Simon Green at NVIDIA.
+
+
+\section{Quadrics}
+
+The quadratic equation in 3 variables can be written as:
+
+\begin{equation}
+f(x,y,z) = Ax^2 +2Bxy+2Cxz+2Dx+Ey^2+2Fyz+Gy+Hz^2 +2Iz+J = 0
+\end{equation}
+
+It can also be written in matrix form using homogenous coordinates:
+
+\begin{equation}
+\v{x}^T\v{Q}\v{x} = 0
+\end{equation}
+
+where $\v{Q}$ is the matrix of coefficients:
+
+\begin{equation}
+\v{Q} = 
+\begin{bmatrix}
+  A & B & C & D \\
+  B & E & F & G \\
+  C & F & H & I \\
+  D & G & I & J
+ \end{bmatrix}
+ \qquad 
+  \v{x} =
+ \begin{bmatrix}
+ x \\ y \\ z \\ 1
+ \end{bmatrix}
+\end{equation}
+
+Because this matrix is symmetric it can be diagonalised by a matrix $\v{T}$. With appropriate scaling, our matrix $\v{Q}$ can be expressed as a diagonal matrix $\v{D}$ with entries $\pm 1$ or $0$:
+
+\begin{equation}
+\v{Q}= \v{T}^{-T}\v{D}\v{T}^{-1}
+\end{equation}
+
+We refer to the basis that diagonalises $\v{Q}$ as the parameter space.
+
+$\v{Q}$ can may be transformed to a different basis by any affine transformation $\v{M}$ by multiplying by $\v{M}^{-1}$ on both sides. This is equivalent to moving a point $\v{x}'$ back to the basis for $\v{Q}$, 
+
+\begin{equation}
+\v{Q'} = \v{M}^{-T}\v{Q}\v{M}^{-1}.
+\end{equation}
+%
+\begin{equation}
+\v{x}' = \v{M}\v{x}
+\end{equation}
+%
+\begin{equation}
+\v{x'}^T\v{Q'}\v{x'} = \v{x'}^T\v{M}^{-T}\v{Q}\v{M}^{-1}\v{x'} = \v{x}^T\v{Q}\v{x}
+\end{equation}
+
+As we will soon see, view (or eye) space is a convenient space for ray-tracing. To transform our quadric equation to view space we multiply by the inverse model view matrix $\v{MV}$:
+
+\begin{equation}
+\v{Q'} = \v{MV}^{-T}\v{Q}\v{MV}^{-1} = \v{MV}^{-T}\v{T}^{-T}\v{D}\v{T}^{-1}\v{MV}^{-1} = (\v{MV}\cdot\v{T})^{-T}\v{D}(\v{MV}\cdot\v{T})^{-1}
+\end{equation}
+
+To ray trace the quadric we parameterise the view ray in the usual way,
+
+\begin{equation}
+\v{x}_v = \v{o} + t\v{d},
+\end{equation}
+
+and transform this back to parameter space:
+
+\begin{equation}
+\v{x}_p = (\v{MV}\cdot\v{T})^{-1}\v{o} + t(\v{MV}\cdot\v{T})^{-1}\v{d} = \v{o}_p + t\v{d}_p
+\end{equation}
+
+Inserting this into our quadratic equation,
+
+\begin{equation}
+\v{x}^T_p\v{Q}\v{x}_p = (\v{o}_p + t\v{d}_p)^T\v{D}(\v{o}_p + t\v{d}_p) = 0,
+\end{equation}
+
+and expanding and gathering for $t$, we have:
+
+\begin{equation}
+t^2(\v{d}^T_p\v{D}\v{d}_p) + 2t(\v{o}^T_p\v{D}\v{d}_p) + \v{o}^T_p\v{D}\v{o}_p = 0
+\end{equation}
+
+which we can solve with the quadratic formula.
+
+The advantage of defining our rays in view space is that the ray origin, or eye position $\v{o}$ is simply the homogenous zero vector:
+
+\begin{equation}
+\v{o} = 
+\begin{bmatrix}
+0 \\
+0 \\
+0 \\
+1
+\end{bmatrix}
+\end{equation}
+
+Which simply extracts the last column of ($\v{MV}\cdot\v{T})^{-1}$ when we form $\v{o}_p$:
+
+\begin{equation}
+\v{o}_p = \v{c}_4
+\end{equation}
+
+
+\bibliographystyle{alpha}
+\bibliography{quadric}
+
+
+\end{document}  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

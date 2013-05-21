@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+\usepackage{mathptmx}
+\usepackage[small,compact]{titlesec} 
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{breakurl}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath}
+\usepackage{epstopdf}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Observations on Meshes}
+\author{Miles Macklin}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section{Motivation}
+
+Manifold meshes are important for many purposes including physical simulation. 
+
+\includegraphics[width=100mm]{Figures.pdf} 
+
+\subsection{Triangle Meshes}
+
+How to classify a vertex based on the number of incident faces and edges.
+
+Interior Vertex: $numEdges = numFaces$
+
+Boundary Vertex: $numEdges = numFaces+1$ or $numEdgesOpen = 2$
+s
+Otherwise vertex is singular.
+
+\subsection{Tetrahedral Meshes}
+
+There are analogous formulas for tetrahedral meshes, but I can't find them.
+
+Interior Vertex: $numFaces = 2*numTets$
+
+Boundary Vertex: ????
+
+\section {References}
+
+\begin{itemize}
+\item{[Gueziec et. al] - Converting Sets of Polygons to Manifold Surfaces by Cutting and Stitching - \url{(http://mesh.brown.edu/taubin/pdfs/gueziec-etal-vis98.pdf}}
+\end{itemize}
+\end{document}  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

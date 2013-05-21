@@ -1,0 +1,145 @@
+\documentclass[11pt]{article}
+\usepackage{mathptmx}
+\usepackage[small,compact]{titlesec} 
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{breakurl}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath}
+\usepackage{epstopdf}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Implicit Springs}
+\author{Miles Macklin}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section{Implicit Integration}
+The backward Euler integration method described in [1][2] requires the Jacobian of spring forces with respect to a particle's position and velocity. This document shows how to derive these Jacobians for use in a semi-implicit integrator.
+
+\subsection{Vector Calculus Basics}
+
+\renewcommand{\v}[1]{\ensuremath{\mathbf{#1}}} % for vectors
+\newcommand{\uv}[1]{\ensuremath{\mathbf{\hat{#1}}}} % for unit vectors
+\newcommand\ddx[1]{\frac{\partial#1}{\partial \v{x} }} 
+\newcommand\dd[2]{\frac{\partial#1}{\partial #2}} 
+
+In order to calculate the force Jacobians we will need to know how to calculate the derivatives of some basic quantities with respect to a vector.
+
+In general the derivative of a scalar valued function with respect to a vector is defined as:
+
+\[\ddx{f} = \begin{bmatrix} \dd{f}{x_i} & \dd{f}{x_j} & \dd{f}{x_k} \end{bmatrix}\]
+
+And for a vector valued function with respect to a vector:
+
+\[\ddx{\v{f}} = \begin{bmatrix} \dd{f_i}{x_i} & \dd{f_i}{x_j} & \dd{f_i}{x_k} \\ \dd{f_j}{x_i} & \dd{f_j}{x_j} & \dd{f_j}{x_k} \\ \dd{f_k}{x_i} & \dd{f_k}{x_j} & \dd{f_k}{x_k} \end{bmatrix}\]
+
+From these definitions we can work out the derivative of some basic geometric quantities. First, the derivative of a dot product of two vectors with respect to one vector:
+
+\[\ddx{\v{x}^T \cdot \v{y}} = \v{y}^T \]
+
+We will explicitly keep track of whether vectors are row vectors or column vectors as it will be important when taking derivatives of spring forces.
+
+The derivative of a vector magnitude with respect to the vector, gives the normalized vector transposed: 
+
+\[\ddx{|\v{x}|} = \left(\frac{\v{x}}{|\v{x}|}\right)^T = \uv{x}^T \]
+
+
+The derivative of a normalized vector $\v{\hat{x}} = \frac{\v{x}}{|\v{x}|} $ can be obtained using the quotient rule:
+
+\[\ddx{\uv{x}} = \frac{\v{I}|\v{x}| - \v{x}\cdot\uv{x}^T}{|\v{x}|^2}\]
+
+Where $\v{I}$ is the $n$ x $n$ identity matrix where n is dimension of $x$, and the product of a column vector and a row vector $\uv{x}\cdot\uv{x}^T$ is the outer product which is an $n$ x $n$ matrix that can be constructed using standard matrix multiplication definition.
+
+Dividing through by $|\v{x}|$ we have:
+
+\[\ddx{\uv{x}} = \frac{\v{I} - \uv{x}\cdot\uv{x}^T}{\v{|x|}}\]
+
+\subsection{Jacobian of Stretch Force}
+
+Recall the equation for the stretch force on a particle $i$ due to an undamped Hookean spring:
+
+\[\v{F_s} = -k_s(|\v{x}_{ij}| - r)\uv{x}_{ij}\]
+
+Where $\v{x}_{ij} = \v{x}_i - \v{x}_j$ is the vector between the two connected particles positions and $r$ is the rest length.
+
+The Jacobian of the stretch force with respect to particle $i$'s position is obtained by using the product rule for the two $\v{x}_i$ dependent terms in $\v{F_s}$:
+
+\[\dd{\v{F_s}}{\v{x}_i} = -ks\left[(|\v{x}_{ij}| - r)\dd{\uv{x}_{ij}}{\v{x}_i} + \uv{x}_{ij}\dd{(|\v{x}_{ij}| - r)}{\v{x}_i}\right]\]
+
+Using the previously derived formulas for the derivative of a vector magnitude and normalized vector we have:
+
+\[\dd{\v{F_s}}{\v{x}_i} = -ks\left[(|\v{x}_{ij}| - r)\left(\frac{\v{I} - \uv{x}_{ij}\cdot \uv{x}_{ij}^T}{|\v{x}_{ij}|}\right) + \uv{x}_{ij}\cdot \uv{x}_{ij}^T\right]\]
+
+Dividing the first two terms through by $|\v{x}_{ij}|$:
+
+\[\dd{\v{F_s}}{\v{x}_i} = -ks\left[(1 - \frac{r}{|\v{x}_{ij}|})\left(\v{I} - \uv{x}_{ij}\cdot \uv{x}_{ij}^T\right) + \uv{x}_{ij}\cdot \uv{x}_{ij}^T\right]\]
+
+Due to the symmetry in the definition of $\v{x}_{ij}$ we have:
+
+\[\dd{\v{F_s}}{\v{x}_j}  = -\dd{\v{F_s}}{\v{x}_i}\]
+
+
+\subsection{Jacobian of Damping Force}
+
+The equation for the damping force on a particle $i$ due to a spring:
+
+\[\v{F_d} = -k_d\cdot\uv{x}(\v{v}_{ij}\cdot \uv{x}_{ij})\]
+
+Where $\v{v}_{ij} = \v{v}_i-\v{v}_j$ is the relative velocities of the two particles. This is the preferred formulation because it damps only velocities along the spring axis.
+
+Taking the derivative with respect to $\v{v}_i$:
+
+\[\dd{\v{F_d}}{\v{v}_i} = -k_d\cdot\uv{x}\cdot\uv{x}^T\]
+
+As with stretching, the force on the opposite particle is simply negated:
+
+\[\dd{\v{F_d}}{\v{v}_j} = -\dd{\v{F_d}}{\v{v}_i} \]
+
+\section {References}
+
+\begin{itemize}
+\item{[Baraff Witkin] - Physically Based Modelling, SIGGRAPH course - \url{http://www.pixar.com/companyinfo/research/pbm2001/}}
+\item{[Baraff Witkin] - Large Steps in Cloth Simulation - \url{http://run.usc.edu/cs599-s10/cloth/baraff-witkin98.pdf}}
+\item{[N. Joubert] - An Introduction to Simulation (\url{http://njoubert.com/teaching/cs184_sp09/section/simulation.pdf})}
+\item{[D Prichard] - Implementing Baraff and Witkin's Cloth Simulation - \url{http://davidpritchard.org/freecloth/docs/report.pdf}}
+\item{[Choi] - Stable but Responsive Cloth - \url{http://graphics.snu.ac.kr/~kjchoi/publication/cloth.pdf}}
+\item{Numerical Recipes, 3rd edition 2007 - ch17.5}
+\end{itemize}
+\end{document}  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

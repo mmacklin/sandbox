@@ -1,0 +1,180 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      6321,        171]
+NotebookOptionsPosition[      5915,        152]
+NotebookOutlinePosition[      6269,        168]
+CellTagsIndexPosition[      6226,        165]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"k", " ", "=", " ", "12"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"h", " ", "=", " ", "0.16"}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"df", "[", "x_", "]"}], " ", ":=", " ", 
+    RowBox[{
+     RowBox[{"-", "k"}], "*", "x"}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"f", "[", "0.0", "]"}], " ", "=", " ", "1"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"f", "[", "t_", "]"}], " ", ":=", " ", 
+    RowBox[{
+     RowBox[{"f", "[", 
+      RowBox[{"t", "-", "h"}], "]"}], " ", "+", " ", 
+     RowBox[{
+      RowBox[{"df", "[", 
+       RowBox[{"f", "[", 
+        RowBox[{"t", "-", "h"}], "]"}], "]"}], "*", "h"}]}]}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"g", "[", "0.0", "]"}], " ", "=", " ", "1"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"g", "[", "t_", "]"}], " ", ":=", " ", 
+    RowBox[{
+     RowBox[{"g", "[", 
+      RowBox[{"t", "-", "h"}], "]"}], " ", "/", " ", 
+     RowBox[{"(", 
+      RowBox[{"1", " ", "+", " ", 
+       RowBox[{"h", "*", "k"}]}], ")"}]}]}], "\[IndentingNewLine]", "\n", 
+   RowBox[{"Slider", "[", 
+    RowBox[{
+     RowBox[{"Dynamic", "[", "k", "]"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", " ", "50"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+   RowBox[{"Slider", "[", 
+    RowBox[{
+     RowBox[{"Dynamic", "[", "h", "]"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"0.05", ",", " ", "1"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Dynamic", "[", 
+    RowBox[{"Show", "[", 
+     RowBox[{
+      RowBox[{"Plot", "[", 
+       RowBox[{
+        RowBox[{"E", "^", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"-", "k"}], "*", "t"}], ")"}]}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"t", ",", " ", "0", ",", " ", "1"}], "}"}], ",", " ", 
+        RowBox[{"PlotRange", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "1"}], ",", " ", "1"}], "}"}]}]}], "]"}], ",", " ", 
+      RowBox[{"DiscretePlot", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"f", "[", "t", "]"}], ",", " ", 
+          RowBox[{"g", "[", "t", "]"}]}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"t", ",", " ", "0", ",", " ", "1", ",", " ", "h"}], "}"}], 
+        ",", " ", 
+        RowBox[{"Joined", "\[Rule]", "True"}], ",", " ", 
+        RowBox[{"PlotRange", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "1"}], ",", " ", "1"}], "}"}]}]}], "]"}]}], "]"}], 
+    "]"}], "\[IndentingNewLine]", "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.545110279958736*^9, 3.545110298192618*^9}, {
+   3.5451103289443617`*^9, 3.5451104843938007`*^9}, 3.545110668341175*^9, {
+   3.545110715845047*^9, 3.545110735610168*^9}, {3.545110825742426*^9, 
+   3.545110863043558*^9}, 3.5451109648866997`*^9, {3.54511102591555*^9, 
+   3.5451111575157137`*^9}, {3.545111240431036*^9, 3.5451112636120663`*^9}, {
+   3.545111353219845*^9, 3.545111421589499*^9}, {3.5451114692034683`*^9, 
+   3.54511150824889*^9}, {3.545111643168723*^9, 3.5451116489195747`*^9}, {
+   3.545111681735175*^9, 3.545111818919779*^9}, {3.54511225237656*^9, 
+   3.545112301620492*^9}, {3.545112373489914*^9, 3.545112387209877*^9}, {
+   3.545112427903893*^9, 3.545112447159322*^9}, {3.54511254772641*^9, 
+   3.545112838356863*^9}, {3.5451128737023563`*^9, 3.545112963896628*^9}, {
+   3.5451129970508738`*^9, 3.5451131460587606`*^9}, {3.545113176442225*^9, 
+   3.545113191305155*^9}, {3.545113226232771*^9, 3.545113230663063*^9}, {
+   3.545113267710207*^9, 3.545113325946389*^9}, {3.545113407135252*^9, 
+   3.545113419854186*^9}, {3.5451134503331757`*^9, 3.545113498840979*^9}, {
+   3.54511365832323*^9, 3.545113748601306*^9}, {3.545113806836681*^9, 
+   3.545113876273964*^9}, {3.545113919195119*^9, 3.545113997966042*^9}, {
+   3.54511412882723*^9, 3.545114299220694*^9}, {3.545114957748069*^9, 
+   3.545114980704899*^9}, {3.545115099509665*^9, 3.5451151180492487`*^9}, {
+   3.54511516858585*^9, 3.5451152681787567`*^9}, {3.545115401224723*^9, 
+   3.545115553144754*^9}, {3.545115632580887*^9, 3.545115632677294*^9}, {
+   3.5451156633223467`*^9, 3.5451156687869577`*^9}, {3.545115706132083*^9, 
+   3.54511570837064*^9}}],
+
+Cell[BoxData[
+ SliderBox[Dynamic[$CellContext`k], {0, 50}]], "Output",
+ CellChangeTimes->{
+  3.5451156335229816`*^9, 3.545115671388918*^9, {3.5451157101444683`*^9, 
+   3.5451157327156477`*^9}}],
+
+Cell[BoxData[
+ SliderBox[Dynamic[$CellContext`h], {0.05, 1}]], "Output",
+ CellChangeTimes->{
+  3.5451156335229816`*^9, 3.545115671388918*^9, {3.5451157101444683`*^9, 
+   3.545115732718563*^9}}],
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Show[
+    Plot[E^((-$CellContext`k) $CellContext`t), {$CellContext`t, 0, 1}, 
+     PlotRange -> {-1, 1}], 
+    DiscretePlot[{
+      $CellContext`f[$CellContext`t], 
+      $CellContext`g[$CellContext`t]}, {$CellContext`t, 0, 1, $CellContext`h},
+      Joined -> True, PlotRange -> {-1, 1}]], StandardForm],
+  ImageSizeCache->{360., {110., 114.}}]], "Output",
+ CellChangeTimes->{
+  3.5451156335229816`*^9, 3.545115671388918*^9, {3.5451157101444683`*^9, 
+   3.5451157327205477`*^9}}]
+}, Open  ]]
+},
+WindowSize->{740, 652},
+WindowMargins->{{7, Automatic}, {Automatic, 24}},
+FrontEndVersion->"8.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 5, \
+2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 4408, 101, 283, "Input"],
+Cell[4990, 125, 193, 4, 40, "Output"],
+Cell[5186, 131, 193, 4, 40, "Output"],
+Cell[5382, 137, 517, 12, 239, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

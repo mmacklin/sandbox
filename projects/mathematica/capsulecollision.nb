@@ -1,0 +1,260 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     10224,        251]
+NotebookOptionsPosition[      9740,        230]
+NotebookOutlinePosition[     10093,        246]
+CellTagsIndexPosition[     10050,        243]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Shows", " ", "how", " ", "tapered", " ", "capsules", " ", "are", " ", 
+    "represented", " ", "in", " ", "the", " ", "PhysX", " ", "cloth", " ", 
+    RowBox[{"code", ".", " ", "The"}], " ", "only", " ", "tricky", " ", "bit",
+     " ", "is", " ", "calculating", " ", "theta", " ", 
+    RowBox[{"(", 
+     RowBox[{"or", " ", "in", " ", "this", " ", "case", " ", "cosTheta"}], 
+     ")"}], " ", "which", " ", "is", " ", "the", " ", "angle", " ", "between",
+     " ", "the", " ", "horizontal", " ", "axis", " ", "and", " ", "the", " ", 
+    "line", " ", "from", " ", "the", " ", "sphere", " ", "center", " ", "to", 
+    " ", "the", " ", "point", " ", "at", " ", "which", " ", "the", " ", 
+    "connecting", " ", "cone", " ", "touches", " ", "the", " ", 
+    RowBox[{
+    "sphere", ".", "\[IndentingNewLine]", "\[IndentingNewLine]", "The"}], " ",
+     "formula", " ", "for", " ", "cosTheta", " ", "can", " ", "be", " ", 
+    "obtained", " ", "by", " ", "calculating", " ", "the", " ", "slope", " ", 
+    "of", " ", "the", " ", "cone", " ", "for", " ", "a", " ", "given", " ", 
+    "value", " ", "of", " ", "theta", " ", "and", " ", "ensuring", " ", 
+    "that", " ", "it", " ", "reaches", " ", "the", " ", "expected", " ", "y", 
+    " ", "value", " ", "at", " ", "the", " ", "other", " ", "end", " ", "of", 
+    " ", "the", " ", "sphere", " ", "over", " ", "a", " ", "distance", " ", 
+    RowBox[{"t", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"c1", " ", ":=", " ", "0"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"c2", " ", ":=", " ", "3"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"r1", " ", ":=", " ", "2"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"r2", " ", ":=", " ", "0.5"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"cosTheta", " ", ":=", " ", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"r1", "-", "r2"}], ")"}], "/", 
+     RowBox[{"(", 
+      RowBox[{"c2", "-", "c1"}], ")"}]}]}], "\[IndentingNewLine]", 
+   RowBox[{"sinTheta", " ", ":=", " ", 
+    RowBox[{"Sqrt", "[", 
+     RowBox[{"1", "-", 
+      RowBox[{"cosTheta", "*", "cosTheta"}]}], "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{"x1", " ", ":=", " ", 
+    RowBox[{"r1", "*", "cosTheta"}]}], "\[IndentingNewLine]", 
+   RowBox[{"x2", " ", ":=", " ", 
+    RowBox[{"r2", "*", "cosTheta"}]}], "\[IndentingNewLine]", 
+   RowBox[{"y1", " ", ":=", " ", 
+    RowBox[{"r1", "*", "sinTheta"}]}], "\[IndentingNewLine]", 
+   RowBox[{"y2", " ", ":=", " ", 
+    RowBox[{"r2", "*", "sinTheta"}]}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", "Controls", " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"{", " ", 
+    RowBox[{"\"\<r1\>\"", ",", " ", 
+     RowBox[{"Slider", "[", 
+      RowBox[{"Dynamic", "[", "r1", "]"}], "]"}]}], "}"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"\"\<r2\>\"", ",", " ", 
+     RowBox[{"Slider", "[", 
+      RowBox[{"Dynamic", "[", "r2", "]"}], "]"}]}], "}"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", " ", 
+    RowBox[{"\"\<c1\>\"", ",", " ", 
+     RowBox[{"Slider", "[", 
+      RowBox[{"Dynamic", "[", "c1", "]"}], "]"}]}], "}"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", " ", 
+    RowBox[{"\"\<c2\>\"", ",", " ", 
+     RowBox[{"Slider", "[", 
+      RowBox[{"Dynamic", "[", "c2", "]"}], "]"}]}], "}"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", "Diagram", " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"Dynamic", "[", 
+    RowBox[{"Graphics", "[", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Circle", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"c1", ",", " ", "0"}], "}"}], ",", " ", "r1"}], "]"}], ",",
+         "\[IndentingNewLine]", 
+        RowBox[{"Circle", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"c2", ",", " ", "0"}], "}"}], ",", " ", "r2"}], "]"}], ",",
+         "\[IndentingNewLine]", 
+        RowBox[{"Line", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"c1", "+", "x1"}], ",", "y1"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"c2", "+", "x2"}], ",", " ", "y2"}], "}"}]}], "}"}], 
+         "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"Line", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"c1", "+", "x1"}], ",", 
+             RowBox[{"-", "y1"}]}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"c2", "+", "x2"}], ",", " ", 
+             RowBox[{"-", "y2"}]}], "}"}]}], "}"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Line", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"c1", ",", "0"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"c1", "+", 
+              RowBox[{"r1", "*", "cosTheta"}]}], ",", " ", 
+             RowBox[{"r1", "*", "sinTheta"}]}], "}"}]}], "}"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Circle", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"c1", ",", " ", "0"}], "}"}], ",", " ", 
+          RowBox[{"r1", "*", "0.1"}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"0", ",", " ", 
+            RowBox[{"ArcCos", "[", "cosTheta", "]"}]}], "}"}]}], "]"}]}], 
+       "}"}], ",", 
+      RowBox[{"Axes", "\[Rule]", "True"}]}], "]"}], "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.540512522098658*^9, 3.5405126827933283`*^9}, {
+  3.540512741894499*^9, 3.5405128703048286`*^9}, {3.540513163511554*^9, 
+  3.540513485061989*^9}, {3.5405155588498173`*^9, 3.540515567514841*^9}, {
+  3.540515646637328*^9, 3.540515649419005*^9}, {3.5405156823489513`*^9, 
+  3.540515866377631*^9}, {3.540515952053625*^9, 3.540516012045539*^9}, {
+  3.540526466358837*^9, 3.5405265022156878`*^9}, {3.540526552395577*^9, 
+  3.540526553010056*^9}, {3.540526682565856*^9, 3.540526752392231*^9}, {
+  3.540526788403249*^9, 3.540526818152854*^9}, {3.540526878243764*^9, 
+  3.540526902746148*^9}, {3.540526990712829*^9, 3.540527007957959*^9}, {
+  3.540527038161322*^9, 3.540527201391858*^9}, {3.540528171665539*^9, 
+  3.540528196403739*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"r1\"\>", ",", 
+   SliderBox[Dynamic[$CellContext`r1]]}], "}"}]], "Output",
+ CellChangeTimes->{{3.540515999963957*^9, 3.540516013640553*^9}, {
+   3.540526478521204*^9, 3.540526502925167*^9}, {3.540526712749588*^9, 
+   3.5405267527033453`*^9}, {3.540526791724015*^9, 3.5405268185826483`*^9}, {
+   3.54052688409225*^9, 3.540526903216485*^9}, 3.540527467841185*^9, 
+   3.540528147651988*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"r2\"\>", ",", 
+   SliderBox[Dynamic[$CellContext`r2]]}], "}"}]], "Output",
+ CellChangeTimes->{{3.540515999963957*^9, 3.540516013640553*^9}, {
+   3.540526478521204*^9, 3.540526502925167*^9}, {3.540526712749588*^9, 
+   3.5405267527033453`*^9}, {3.540526791724015*^9, 3.5405268185826483`*^9}, {
+   3.54052688409225*^9, 3.540526903216485*^9}, 3.540527467841185*^9, 
+   3.5405281476558723`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"c1\"\>", ",", 
+   SliderBox[Dynamic[$CellContext`c1]]}], "}"}]], "Output",
+ CellChangeTimes->{{3.540515999963957*^9, 3.540516013640553*^9}, {
+   3.540526478521204*^9, 3.540526502925167*^9}, {3.540526712749588*^9, 
+   3.5405267527033453`*^9}, {3.540526791724015*^9, 3.5405268185826483`*^9}, {
+   3.54052688409225*^9, 3.540526903216485*^9}, 3.540527467841185*^9, 
+   3.5405281476589622`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"c2\"\>", ",", 
+   SliderBox[Dynamic[$CellContext`c2]]}], "}"}]], "Output",
+ CellChangeTimes->{{3.540515999963957*^9, 3.540516013640553*^9}, {
+   3.540526478521204*^9, 3.540526502925167*^9}, {3.540526712749588*^9, 
+   3.5405267527033453`*^9}, {3.540526791724015*^9, 3.5405268185826483`*^9}, {
+   3.54052688409225*^9, 3.540526903216485*^9}, 3.540527467841185*^9, 
+   3.540528147661586*^9}],
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Graphics[{
+     Circle[{$CellContext`c1, 0}, $CellContext`r1], 
+     Circle[{$CellContext`c2, 0}, $CellContext`r2], 
+     Line[{{$CellContext`c1 + $CellContext`x1, $CellContext`y1}, \
+{$CellContext`c2 + $CellContext`x2, $CellContext`y2}}], 
+     Line[{{$CellContext`c1 + $CellContext`x1, -$CellContext`y1}, \
+{$CellContext`c2 + $CellContext`x2, -$CellContext`y2}}], 
+     Line[{{$CellContext`c1, 
+        0}, {$CellContext`c1 + $CellContext`r1 $CellContext`cosTheta, \
+$CellContext`r1 $CellContext`sinTheta}}], 
+     Circle[{$CellContext`c1, 0}, $CellContext`r1 0.1, {0, 
+       ArcCos[$CellContext`cosTheta]}]}, Axes -> True], StandardForm],
+  ImageSizeCache->{360., {139., 144.}}]], "Output",
+ CellChangeTimes->{{3.540515999963957*^9, 3.540516013640553*^9}, {
+   3.540526478521204*^9, 3.540526502925167*^9}, {3.540526712749588*^9, 
+   3.5405267527033453`*^9}, {3.540526791724015*^9, 3.5405268185826483`*^9}, {
+   3.54052688409225*^9, 3.540526903216485*^9}, 3.540527467841185*^9, 
+   3.5405281476646338`*^9}]
+}, Open  ]]
+},
+WindowSize->{740, 652},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"8.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 5, \
+2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 6355, 144, 523, "Input"],
+Cell[6937, 168, 431, 8, 40, "Output"],
+Cell[7371, 178, 433, 8, 40, "Output"],
+Cell[7807, 188, 433, 8, 40, "Output"],
+Cell[8243, 198, 431, 8, 40, "Output"],
+Cell[8677, 208, 1047, 19, 298, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

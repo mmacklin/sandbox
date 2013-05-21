@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NanoRay", "NanoRay.vcxproj", "{7EF7426A-05B6-4A5C-AB23-D417D081C6B2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{81732CB7-6059-4E5C-8B57-5576137CE73D} = {81732CB7-6059-4E5C-8B57-5576137CE73D}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10587316-BB82-493F-B9CC-6B52AA88CEE9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "..\..\core\core.vcxproj", "{81732CB7-6059-4E5C-8B57-5576137CE73D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7EF7426A-05B6-4A5C-AB23-D417D081C6B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7EF7426A-05B6-4A5C-AB23-D417D081C6B2}.Debug|Win32.Build.0 = Debug|Win32
+		{7EF7426A-05B6-4A5C-AB23-D417D081C6B2}.Release|Win32.ActiveCfg = Release|Win32
+		{7EF7426A-05B6-4A5C-AB23-D417D081C6B2}.Release|Win32.Build.0 = Release|Win32
+		{81732CB7-6059-4E5C-8B57-5576137CE73D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{81732CB7-6059-4E5C-8B57-5576137CE73D}.Debug|Win32.Build.0 = Debug|Win32
+		{81732CB7-6059-4E5C-8B57-5576137CE73D}.Release|Win32.ActiveCfg = Release|Win32
+		{81732CB7-6059-4E5C-8B57-5576137CE73D}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

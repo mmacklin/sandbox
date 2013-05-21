@@ -1,0 +1,67 @@
+uniform float g_scatter;
+uniform float g_absorption;
+uniform float g_lightIntensity;
+uniform vec3 g_lightPos;
+uniform sampler3D g_noiseTexture;
+void main ()
+{
+  int i;
+  vec3 Lo;
+  vec3 transmittance;
+  vec3 lightPos;
+  vec3 eyeDir;
+  vec3 pos;
+  vec3 kScatter;
+  vec3 kAbsorption;
+  kAbsorption = (vec3(8.0, 8.0, 7.6) * g_absorption);
+  kScatter = (vec3(2.4, 2.7, 3.0) * g_scatter);
+  vec3 tmpvar_1;
+  tmpvar_1 = gl_TexCoord[0].xyz;
+  pos = ((tmpvar_1 * 0.5) + vec3(0.5, 0.5, 0.5));
+  eyeDir = (0.0104167 * normalize ((tmpvar_1 - gl_ModelViewMatrixInverse[3].xyz)));
+  lightPos = ((g_lightPos * 0.5) + vec3(0.5, 0.5, 0.5));
+  transmittance = vec3(1.0, 1.0, 1.0);
+  Lo = vec3(0.0, 0.0, 0.0);
+  i = 0;
+  for (int i = 0; i < 96; ) {
+    vec3 lightDir;
+    vec3 tmpvar_2;
+    tmpvar_2 = (0.03125 * normalize ((lightPos - pos)));
+    lightDir = tmpvar_2;
+    float tmpvar_3;
+    tmpvar_3 = texture3D (g_noiseTexture, pos).x;
+    if ((tmpvar_3 > 0.0)) {
+      int s;
+      vec3 lpos;
+      vec3 ltransmittance;
+      ltransmittance = vec3(1.0, 1.0, 1.0);
+      lpos = (pos + tmpvar_2);
+      s = 0;
+      while (true) {
+        if ((s >= 16)) {
+          break;
+        };
+        vec3 tmpvar_4;
+        tmpvar_4 = (ltransmittance * (1.0 - ((kScatter * 0.0625) * texture3D (g_noiseTexture, lpos).x)));
+        ltransmittance = tmpvar_4;
+        if ((tmpvar_4.x <= 0.01)) {
+          break;
+        };
+        lpos = (lpos + lightDir);
+        s = (s + 1);
+      };
+      Lo = (Lo + (((ltransmittance * tmpvar_3) * transmittance) * 0.0208333));
+      vec3 tmpvar_5;
+      tmpvar_5 = (transmittance * (1.0 - ((tmpvar_3 * 0.0208333) * kAbsorption)));
+      transmittance = tmpvar_5;
+      if ((tmpvar_5.x <= 0.01)) {
+        break;
+      };
+    };
+    pos = (pos + eyeDir);
+    i = (i + 1);
+  };
+  gl_FragColor.xyz = ((Lo * vec3(8.0, 8.0, 8.0)) * g_lightIntensity);
+  gl_FragColor.w = max (0.0, (1.0 - dot (transmittance, vec3(0.33, 0.33, 0.33))));
+}
+

@@ -1,0 +1,8 @@
+Add image reconstruction filter
+Add light source sampling
+Add material types
+Add volume types
+Add exposure control
+
+***Add disc primitive with uniform sampling
+

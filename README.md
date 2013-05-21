@@ -5,7 +5,7 @@ Graphics and physics research, snippets, demos. Some are described here:
 
 http://blog.mmacklin.com
 
-Directory Structure:
+Directories:
 
 	core/				- shared foundation code, math lib, etc
 	projects/
@@ -25,7 +25,6 @@ Directory Structure:
 		sh/			- glossy reflections using spherical harmonics
 		smoke/			- implementation of Fedkiw's Visual Simulation of Smoke, vortex particles and black-body rendering
 		springs/		- implicit spring solver
-		surfel/			- misnamed, unfinished uv-atlas generation
 	external/
 
 
